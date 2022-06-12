@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>MyIP</title>
+	
+</head>
+<body>
+	<br><br>
+	<div id="inf"></div><br><br>
+	<input type="button" name="btn" id="btn" value="myIp">
+	<script type="text/javascript">
+		window.onload=inicio;
+		function inicio(){
+			btn.addEventListener("click", peticionAjax);
+		}
+
+		var vent;
+		function peticionAjax(){
+
+			var parNew;
+			var txt;
+			var txPar;
+			var xhr = new XMLHttpRequest();
+			var url = "http://ip-api.com/json/";
+			xhr.open("GET", url);
+			xhr.addEventListener("readystatechange", respuesta);
+			xhr.send();
+		    abrirVentana();
+
+		    txt = vent.document.getElementById("newId");
+
+			//console.log(txt);
+			parNew = vent.document.createElement("p");
+			parNew.setAttribute("id", "nuevoParr");
+			parNew.nodeText=
+			txt = vent.document.createTextNode("hola desde papa");
+			txPar =vent.document.getElementById("nuevoParr");
+			txPar.appendChild(txt);
+			//txt.innerHTML +="hola desde papa";
+			//console.log(txt.textContent);
+		}
+
+		function abrirVentana(){
+			vent = window.open("newW.html","nueva","height=300, width=300");
+		}
+
+		function respuesta(){
+			var respJSON;
+			var datosJSON;
+			var prop=[];
+			var cont=0;
+			var literales=["Estado","Pais","Codigo de pais","Codigo de region","Region","Ciudad","Codigo postal","Latitud","Longitud","Zona horaria","Proveedor","Organizacion","AS","IP"];
+
+			if(this.readyState == 4 && this.status == 200){
+				respJSON = this.responseText;
+				datosJSON = JSON.parse(respJSON);   //respJSON->cadena  datosJSON->OBJETO JAVASCRIPT
+				inf.innerHTML += "RESPUESTA SIN PROCESAR: <br>";
+				inf.innerHTML += respJSON;
+				inf.innerHTML += "<br><br>RESPUESTA PROCESADA: <BR>";
+
+				for(var propi in datosJSON){
+					inf.innerHTML += "<b>"+propi+"</b>: "+datosJSON[propi]+"<br>";
+				}
+				inf.innerHTML += "<br>RESPUESTA CON LITERALES<BR>";
+
+				for(var prop2 in datosJSON){
+					prop[cont] = prop2;             // propiedades originales se meten en el arr prop[]
+					cont++;
+				}
+
+				for(var i=0;i<literales.length;i++){
+					inf.innerHTML += literales[i]+": "+datosJSON[prop[i]]+"<br>";
+				}
+			}			
+		}	
+
+	</script>
+</body>
+</html>
